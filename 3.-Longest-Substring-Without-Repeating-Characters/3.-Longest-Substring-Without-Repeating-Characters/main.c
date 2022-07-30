@@ -9,22 +9,22 @@
 #include <string.h>
 
 int lengthOfLongestSubstring(char * s){
-    
-    int map[256] = {0};
+    unsigned int map[8] = {0};
     uint16_t ret = 0;
     uint16_t cnt = 0;
-    uint16_t index = 0;
-    uint16_t index_2 = 1;
-    int char_number = 0;
+    uint16_t index,index_2;
+    unsigned int char_number, ascii_block, bit;
     
     
     for(index = 0;*(s+index)!='\0';index++)
     {
-        for(index_2 = index;*(s+index_2)!='\0';index_2++)
+         for(index_2 = index;*(s+index_2)!='\0';index_2++)
         {
             char_number = (int)*(s+index_2);//search_char_number(*(s+index));
+            ascii_block = char_number/(unsigned int)32;
+            bit = 1 << char_number % (unsigned int)32;
             
-            if(map[char_number] == 1)
+            if(map[ascii_block] & bit)
             {
                 if(ret < cnt)
                 {
@@ -35,13 +35,12 @@ int lengthOfLongestSubstring(char * s){
                 //map[char_number] = 1;
                 break;
             }
-            else if(map[char_number]==0)
+            else
             {
                 cnt++;
-                map[char_number] = 1;
+                map[ascii_block] |= bit;
             }
         }
-
     }
     if(ret < cnt)
     {
@@ -52,9 +51,8 @@ int lengthOfLongestSubstring(char * s){
 
 int main(int argc, const char * argv[]) {
     // insert code here...
-    char s[]="asjrgapa";
+    char s[]="?";
     int result = lengthOfLongestSubstring(s);
-    
     printf("result = %d\n",result);
     return 0;
 }
