@@ -12,17 +12,20 @@ int lengthOfLongestSubstring(char * s){
     unsigned int map[8] = {0};
     uint16_t ret = 0;
     uint16_t cnt = 0;
-    uint16_t index,index_2;
+    uint8_t w_flag = 0;
+    char* index = s;
+    char* index_2 =s;
+    uint16_t end;
     unsigned int char_number, ascii_block, bit;
-    
-    
-    for(index = 0;*(s+index)!='\0';index++)
+    end = strlen(s);
+    while(*index)
     {
-         for(index_2 = index;*(s+index_2)!='\0';index_2++)
+        index_2 = index;
+        while(*index_2)
         {
-            char_number = (int)*(s+index_2);//search_char_number(*(s+index));
+            char_number = (int)*(index_2);//search_char_number(*(s+index));
             ascii_block = char_number/(unsigned int)32;
-            bit = 1 << char_number % (unsigned int)32;
+            bit = 1U << char_number % (unsigned int)32;
             
             if(map[ascii_block] & bit)
             {
@@ -32,16 +35,24 @@ int lengthOfLongestSubstring(char * s){
                 }
                 cnt = 0;
                 memset(&map,0,sizeof(map));
-                //map[char_number] = 1;
                 break;
             }
             else
             {
+                w_flag = 1;
                 cnt++;
                 map[ascii_block] |= bit;
             }
+            if(ret>=end) break;
+            index_2++;
+            
         }
+        if(w_flag==0) break;
+        else w_flag = 0;
+        if(ret>=end) break;
+        index++;
     }
+    
     if(ret < cnt)
     {
         ret = cnt;
@@ -51,7 +62,8 @@ int lengthOfLongestSubstring(char * s){
 
 int main(int argc, const char * argv[]) {
     // insert code here...
-    char s[]="?";
+    char s[]="eeydgwdykpv";
+    printf("result1 = %d\n",strlen(s));
     int result = lengthOfLongestSubstring(s);
     printf("result = %d\n",result);
     return 0;
