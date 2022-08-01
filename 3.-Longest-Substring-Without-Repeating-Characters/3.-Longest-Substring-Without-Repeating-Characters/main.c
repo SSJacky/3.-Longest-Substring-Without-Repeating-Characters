@@ -3,26 +3,27 @@
 //  3.-Longest-Substring-Without-Repeating-Characters
 //
 //  Created by 夏蜃詰 on 2022/7/3.
-//
+//Time Complexity: O(N), where N is the length of the string.
+//Space Complexity: O(min(N,M)), as HashSet is used. N is the length of the string and M is the size of the substrings.//
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 int lengthOfLongestSubstring(char * s){
-    unsigned int map[8] = {0};
+    unsigned int map[256] = {0};
     uint16_t ret = 0;
     uint16_t cnt = 0;
     char* index = s;
-    char* index_2 =s;
-    unsigned int char_number, ascii_block, bit,bit2;
+    char* index_2 = s;
+    unsigned int char_number;
 
     while(*index_2)
     {
         char_number = (int)*(index_2);//search_char_number(*(s+index));
-        ascii_block = char_number/(unsigned int)32;
-        bit = 1U << char_number % (unsigned int)32;
+
         
-        if(map[ascii_block] & bit)
+        if(map[char_number] == 1)
         {
             cnt = index_2-index;
             if(ret < cnt)
@@ -31,10 +32,9 @@ int lengthOfLongestSubstring(char * s){
             }
             while(*index != *index_2)
             {
+                /*kick of the repeating character**/
                 char_number = (int)*(index);
-                ascii_block = char_number/(unsigned int)32;
-                bit2 = 1U << char_number % (unsigned int)32;
-                map[ascii_block] ^= bit2;
+                map[char_number] = 0;
                 index++;
                 
             }
@@ -42,7 +42,7 @@ int lengthOfLongestSubstring(char * s){
         }
         else
         {
-            map[ascii_block] |= bit;
+            map[char_number]= 1;
         }
         index_2++;
     }
@@ -56,7 +56,7 @@ int lengthOfLongestSubstring(char * s){
 
 int main(int argc, const char * argv[]) {
     // insert code here...
-    char s[]=" ";
+    char s[]="abcabcbb";
     int result = lengthOfLongestSubstring(s);
     printf("result = %d\n",result);
     return 0;
